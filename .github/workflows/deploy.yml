@@ -1,20 +1,30 @@
+name: Deploy HTML to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Change if using a different branch
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
-  # Single deploy job no building
   deploy:
-    environment:
-      name: github-pages
-      url: ${{steps.deployment.outputs.page_url}}
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
+
       - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload Artifact
+        uses: actions/configure-pages@v3
+
+      - name: Upload Files to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          # upload entire directory
-          path: /home/ubuntuws/github-pages/public
+          path: github-pages/  # 🔹 Ensure this points to your correct directory
+
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v2
