@@ -24,7 +24,7 @@ jobs:
       - name: Upload Files to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: github-pages/  # 🔹 Ensure this points to your correct directory
+          path: /home/ubuntuws/github-pages/public
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v2
