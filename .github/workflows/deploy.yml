@@ -14,24 +14,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 2: Set up Node.js (optional if you need it)
-    # You can skip this if you don't need Node.js for your HTML build process
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'  # Use the Node.js version of your choice
-
-    # Step 3: Install dependencies (only needed if you have dependencies)
-    # You can skip this if you don’t have any dependencies (e.g., you're just using plain HTML)
-    - name: Install dependencies
-      run: npm install
-
-    # Step 4: Build your project (optional step)
-    # Skip this step if you're directly deploying plain HTML without a build process
-    - name: Build project
-      run: npm run build
-
-    # Step 5: Deploy to GitHub Pages (using the 'gh-pages' branch)
+    # Step 2: Deploy to GitHub Pages (using the 'gh-pages' branch)
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
