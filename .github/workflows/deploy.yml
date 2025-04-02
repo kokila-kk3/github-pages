@@ -11,6 +11,22 @@ permissions:
   id-token: write
 
 jobs:
+
+ build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
   deploy:
     runs-on: ubuntu-latest
     environment:
@@ -26,7 +42,7 @@ jobs:
       - name: Upload Files to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: /github-pages/public
+          path: public
 
       - name: Deploy to GitHub Pages
         id: deployment
