@@ -1,34 +1,40 @@
-name: Deploy HTML to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main  # Change if using a different branch
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+      - main  # Trigger the workflow when changes are pushed to the 'main' branch
 
 jobs:
-
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages 
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+    # Step 1: Checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+    # Step 2: Set up Node.js (optional if you need it)
+    # You can skip this if you don't need Node.js for your HTML build process
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'  # Use the Node.js version of your choice
 
-      - name: Upload Files to GitHub Pages
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public
+    # Step 3: Install dependencies (only needed if you have dependencies)
+    # You can skip this if you don’t have any dependencies (e.g., you're just using plain HTML)
+    - name: Install dependencies
+      run: npm install
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    # Step 4: Build your project (optional step)
+    # Skip this step if you're directly deploying plain HTML without a build process
+    - name: Build project
+      run: npm run build
+
+    # Step 5: Deploy to GitHub Pages (using the 'gh-pages' branch)
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages  # The branch where GitHub Pages will be published
+        folder: public  # The folder to deploy (can be a subfolder if you have a build process, e.g., 'dist')
+        token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token automatically created for the repository
