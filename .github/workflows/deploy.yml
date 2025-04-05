@@ -3,12 +3,13 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Trigger the workflow when changes are pushed to the 'main' branch
+      - main  # Trigger the workflow when changes are pushed to the 'main' or 'deploy' branch
+      - deploy  # Trigger the workflow when changes are pushed to the 'deploy' branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-     
+
     permissions:
       contents: write
 
@@ -17,10 +18,25 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 2: Deploy to GitHub Pages (using the 'gh-pages' branch)
+    # Step 2: Determine which branch to deploy to and set the environment variable
+    - name: Set the branch for deployment
+      id: set_branch
+      run: |
+        if [ "${GITHUB_REF##*/}" == "main" ]; then
+          echo "Deploying from main branch"
+          echo "branch=main" >> $GITHUB_ENV
+        elif [ "${GITHUB_REF##*/}" == "deploy" ]; then
+          echo "Deploying from deploy branch"
+          echo "branch=deploy" >> $GITHUB_ENV
+        else
+          echo "Branch not recognized, skipping deployment"
+          exit 0
+        fi
+
+    # Step 3: Deploy to GitHub Pages using the determined branch
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        branch: main  # The branch where GitHub Pages will be published
+        branch: ${{ env.branch }}  # This uses the environment variable 'branch' which was set in Step 2
         folder: public  # The folder to deploy (can be a subfolder if you have a build process, e.g., 'dist')
         token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token automatically created for the repository
